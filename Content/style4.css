@@ -270,6 +270,7 @@ span {
     display: none;
 }
 #sidebar.active .components #dataSubmenu .option_menu .link_option_menu,
+#sidebar.active .components #data1Submenu .option_menu .link_option_menu,
 #sidebar.active .components #adjSubmenu .option_menu .link_option_menu {
     display: none;
 }
