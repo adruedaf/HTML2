@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -660,3 +661,172 @@
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> Juego Buscaminas Angel Wha Proyecto Final </title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+<!--
+X	Pedir Cantidad de Finas y Columnas
+X	Pedir Cantidad de Minas
+X	Que no sobrepasen la cantidad de fichas en el tablero
+X	Minas Aleatorias
+X	El numero de Minas total deben colocarse en el tablero
+X	botón para reiniciar el juego
+X	botón para terminar el juego
+X	Al terminar el juego se revelará el contenido
+X	contador: número total de casillas descubiertas.
+...	contador: la cantidad de minas identificadas.
+
+...	Ajustar dinámicamente colores y/o imágenes para:
+		posición con mina,
+		posición libre,
+		cantidad de minas alrededor,
+		etc.
+-->
+
+</head>
+<body>
+	<h1> Buscaminas Angel Wha </h1>
+	
+		¿Numero de Filas?: <input type="text" id="fil_txt" value="4" />
+		<br>
+		¿Numero de Columnas?: <input type="text" id="col_txt" value="4" />
+		<br>
+		¿Cuantas Banderas Quieres?: <input type="text" id="minas_txt" value="8" />
+		<br>
+		<button type="button" onclick="filasColumnas('fil_txt', 'col_txt', 'minas_txt')">Jugar</button> 
+		<br>
+
+		<script type = "text/javascript">
+		var filas	 = 0;
+		var columnas = 0;
+		var minas = 0;
+		var puntos = 0;
+
+		var matriz = new Array(filas);
+
+		function filasColumnas(f, c, m){
+			filas 	= document.getElementById(f).value;
+			columnas= document.getElementById(c).value;
+			minas 	= document.getElementById(m).value;
+
+			if(filas <1 || columnas<1 || filas == "" || columnas == ""){
+				alert('Error en Filas o Columnas');
+			}else if(minas > filas*columnas || minas < 0 || minas == ""){
+				alert('Error Minas');
+			}else{
+				document.write("Filas : " 	 + filas 	+ '<br>');
+				document.write("Columnas : " + columnas + '<br>');
+				document.write("Minas : " 	 + minas 	+ '<br>');
+				document.write("Puntuación : " 	 + puntos 	+ '<br>');
+				document.write('<button type="button" onclick="javascript:location.reload()">Actualizar</button>');
+				document.write('<button type="button" onclick="destaparBotones()"> Destapar </button>');
+				document.write('<br><br>');
+
+				llenarMatriz();
+				colocarMinas();
+				imprimeMatriz();
+				llenarMatrizBotones();
+				
+			}
+		}
+
+//se llena la matriz del buscaminas con las posiciones de las banderas y las minas random
+		function llenarMatriz(){
+			for( n = 0; n<filas; n++){
+				matriz[n] = new Array(columnas);
+			}
+
+			for( j = 0; j<filas; j++){
+				for( i = 0; i<columnas; i++){
+					matriz[j][i] = 0;
+				}	
+			}
+		}
+
+//se colocan las banderas y las minas de la matriz del buscaminas igual random
+		function colocarMinas(){
+			i = 0;
+			while( i < minas){
+				X = entero_aleatorio(0, filas);
+				Y = entero_aleatorio(0, columnas);
+				if(matriz[X][Y] != 1){
+					matriz[X][Y]= 1;
+					i++;
+				}
+			}
+		}
+
+//Imprimes la matriz con las minas y las banderas para que puedas ver la posicion de cada una de ellas :)
+		function imprimeMatriz(){
+			for( j = 0; j<filas; j++){
+				for( i = 0; i<columnas; i++){
+					document.write( "|"+ matriz[j][i] + "|" );
+				}
+				document.write('<br>');
+			}
+		}
+
+		function entero_aleatorio(min, max){		
+			return Math.floor(Math.random() * (max - min) + min);
+		}
+
+//cambios en los botones del buscaminas
+		function cambiarBoton(div_id){
+			document.getElementById(div_id).style.background = "rgb(0,0,0)";
+			document.getElementById(div_id).style.color = "rgb(255, 255, 255)";
+			//<!--tazo = document.getElementById("this.id"); -->
+			//document.write(div_id);
+			a = "";
+			b = "";
+
+			for(i = 0; i < div_id.length; i++){
+				if(i == div_id.indexOf('_')){
+					continue;
+				}else{
+					if(i < div_id.indexOf('_')){
+						a += div_id.charAt(i);
+					}else {
+						b += div_id.charAt(i);
+					}
+				}
+			}
+			document.getElementById(div_id).innerHTML = matriz[a][b];
+			if(matriz[a][b] == 1){
+				puntos++;
+				alert("Puntuación : " 	 + puntos);
+			}else{
+				destaparBotones();
+			}
+			
+		}
+
+//matriz con los botones del buscaminas y cuando estos se destapan
+		function llenarMatrizBotones(){
+			for(var j = 0; j<filas; j++){
+				for(var i = 0; i<columnas; i++){
+					document.write('<button type="button" id="' + j + "_" + i +'" onclick="cambiarBoton(this.id), j, i"> x </button>');
+				}
+				document.write('<br>');
+			}
+		}
+
+		function destaparBotones(){
+			for(j = 0; j<filas; j++){
+				for(i = 0; i<columnas; i++){
+					document.getElementById(j+"_"+i).style.background = "rgb(0,0,0)";
+					document.getElementById(j+"_"+i).style.color 	  = "rgb(255, 255, 255)";
+					document.getElementById(j+"_"+i).innerHTML 		  = matriz[j][i];
+				}
+			}
+			alert('El Juego ha Terminado \nTu puntuación es:  '+puntos);
+		}
+
+</script>
+</body>
+</html>
+>>>>>>> 57fa22d4fafa2f0aa7bc9f6806719b02242b99a8
