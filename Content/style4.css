@@ -270,7 +270,6 @@ span {
     display: none;
 }
 #sidebar.active .components #dataSubmenu .option_menu .link_option_menu,
-#sidebar.active .components #data1Submenu .option_menu .link_option_menu,
 #sidebar.active .components #adjSubmenu .option_menu .link_option_menu {
     display: none;
 }
@@ -278,7 +277,6 @@ span {
 #sidebar.active .sidebar-header strong,
 #sidebar.active .components #homeSubmenu strong,
 #sidebar.active .components #dataSubmenu strong,
-#sidebar.active .components #data1Submenu strong,
 #sidebar.active .components #adjSubmenu strong {
     display: block;
 }
@@ -325,7 +323,6 @@ span {
 
 #sidebar .components #homeSubmenu strong,
 #sidebar .components #dataSubmenu strong,
-#sidebar .components #data1Submenu strong,
 #sidebar .components #adjSubmenu strong {
     display: none;
 }
@@ -452,12 +449,6 @@ a.article:hover {
         display: none;
     }
     #dataSubmenu .option_menu strong{
-        display: block;
-    }
-     #data1Submenu .option_menu .link_option_menu {
-        display: none;
-    }
-    #data1Submenu .option_menu strong{
         display: block;
     }
 
