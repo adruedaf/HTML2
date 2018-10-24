@@ -278,6 +278,7 @@ span {
 #sidebar.active .sidebar-header strong,
 #sidebar.active .components #homeSubmenu strong,
 #sidebar.active .components #dataSubmenu strong,
+#sidebar.active .components #data1Submenu strong,
 #sidebar.active .components #adjSubmenu strong {
     display: block;
 }
