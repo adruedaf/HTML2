@@ -1,393 +1,412 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- saved from url=(0047)http://www.uv.es/~jac/guia/jscript/palabras.htm -->
+<!DOCTYPE html>
 <html>
 
 <head>
-    <script src="http://aprendeenlinea.udea.edu.co/lms/moodle/lib/ufo.js" type="text/javascript">
-    </script>
-    <link href="http://aprendeenlinea.udea.edu.co/lms/moodle/theme/standard/styles.php" rel="stylesheet" type="text/css" />
-    <link href="http://aprendeenlinea.udea.edu.co/lms/moodle/theme/aprendeenlinea/styles.php" rel="stylesheet" type="text/css" />
-    <title>
-        Ejemplo de juego
-    </title>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/Personalizacion/Mi Estilo.css" rel="stylesheet">
-    <link href="css/bootstrap-social.css" rel="stylesheet">
-    <link href="https://use.fontawesome.com/38f344ad72.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <script language="JavaScript">
-        var hombre = new Array("___\n", "   |\n", "   O\n", "  /", "|", "\\\n", "  /", " \\\n", "___")
-        var palabra
-        var libreriaPalabras = new Array("m u l t i m e d i a", "i n t e r n a u t a", "s e r v i d o r", "p r o t o c o l o", "c o r t a f u e g o s",
-            "n a v e g a d o r", "n o d o", "m a r c o", "p a g i n a", "t e l a r a ñ a",
-            "d e s c a r g a r", "v i r t u a l", "m e m o r i a", "d i s c o", "l o c a l",
-            "c o n e c t a r", "d e s c o n e c t a r", "e n c a m i n a d o r", "i n t e r n e t", "d o m i n i o",
-            "d i n a m i c o", "h i p e r v i n c u l o", "e n l a c e", "m a r c a d o r", "o r d e n a d o r", "l a p i z", "o f i m a t i c a", "i n f o r m e")
-        var partes = 0
-        var colNueva = 0
-        var jugando
-
-
-        function ObtienePalabra() {
-            //obtiene la palabra para jugar de forma pseudoaleatoria
-            var indice = Math.round(Math.random() * 27)
-            var cadena = new String(libreriaPalabras[indice])
-            palabra = cadena.split(" ")
-        }
-
-
-        function DibujaHombre(visor, partes) {
-            //dibuja el hombre ahorcado
-            //partes indica el numero de partes a dibujar
-            var dibujo = ""
-            if (partes < 10)
-                for (var x = 0; x < partes; x++) {
-                    dibujo += hombre[x]
-                }
-            visor.displayHombre.value = dibujo
-        }
-
-
-        function DibujaLetra(visor, letra) {
-            //dibuja una letra de la palabra
-            //posicion indica donde debe dibujar la letra
-            var flag = false
-            //indica si se encontro la letra 
-            //obtiene cadena actual
-            var cadena = new String(visor.displayPalabra.value)
-            //la separa en sus espacios
-            var letrasCadena = cadena.split(" ")
-            cadena = ""
-            for (var x = 0; x < palabra.length; x++) {
-                if (palabra[x] == letra) {
-                    cadena += letra + " "
-                    flag = true
-                } else
-                    cadena += letrasCadena[x] + " "
-            }
-            visor.displayPalabra.value = cadena
-            return flag
-        }
-
-
-        function NuevaLetra(visor, letra) {
-            //añade letra lista de letras
-            visor.displayLetras.value += letra + " "
-            //comprueba si ha de pasar a la siguiente fila
-            if (colNueva == 3) {
-                visor.displayLetras.value += "\n"
-                colNueva = 0
-            } else
-                colNueva++
-        }
-
-
-        function Juega(visor, letra) {
-            //comprueba si esta jugando
-            if (jugando) {
-                //ciclo de jugada
-                //1. añade letra a la lista
-                NuevaLetra(visor, letra)
-                //2. dibuja la letra y comprueba si acierto
-                var acierto = DibujaLetra(visor, letra)
-                //3. si no acierto, dibuja hombre
-                if (!acierto)
-                    DibujaHombre(visor, ++partes)
-                //4. comprueba si fin
-                if (partes == 9)
-                    FinJuego(false)
-                else if (CompruebaPalabra(visor))
-                    FinJuego(true)
-            } else {
-                alert('Pulsa Juego nuevo para comenzar\nuna partida nueva.')
-            }
-        }
-
-        function IniciaJuego(visor) {
-            //inicializa visor y variables globales
-            jugando = true
-            partes = 0
-            colNueva = 0
-            ObtienePalabra()
-            DibujaHombre(visor, partes)
-            visor.displayPalabra.value = ""
-            for (var x = 0; x < palabra.length; x++)
-                visor.displayPalabra.value += "_ "
-            visor.displayLetras.value = ""
-        }
-
-        function CompruebaPalabra(visor) {
-            //comprueba si se completo toda la palabra
-            var fin = true
-            //obtiene cadena actual
-            var cadena = new String(visor.displayPalabra.value)
-            //la separa en sus espacios
-            var letrasCadena = cadena.split(" ")
-            for (var x = 0; x < letrasCadena.length; x++)
-                if (letrasCadena[x] == "_")
-                    fin = false
-            return fin
-        }
-
-
-        function FinJuego(resultado) {
-            //indica que si se ha perdido o ganado
-            var solucion = ""
-            jugando = false
-            if (resultado) {
-                document.visor.ganadas.value++
-                alert("Acertaste !")
-            } else {
-                document.visor.perdidas.value++
-                //construye la palabra solucion
-                for (var x = 0; x < palabra.length; x++)
-                    solucion += palabra[x]
-                alert("Has muerto !\n La palabra era: " + solucion)
-            }
-        }
-    </script>
-    <meta content="MSHTML 6.00.2900.2802" name="GENERATOR" />
-    </meta>
+    <title>Diseños de Sitios Web</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <!-- Our Custom CSS -->
+    <link href="Content/style4.css" rel="stylesheet" />
+    <!-- Font Awesome JS -->
+    <script defer src="Scripts/solid.js"></script>
+    <script defer src="Scripts/fontawesome.js"></script>
+    <!-- DatePiker -->
+    <script type="text/javascript" src="Content/Calendario/calendario.js"></script>
+    <link href="Content/Calendario/calendario.css" rel="stylesheet" />
+    <!-- Iconos -->
+    <link href="Content/open-iconic-master/font/css/open-iconic.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="ahorcado2 jumbotron">
-        <div class="container">
-            <img align="right" alt="" class="img-responsive" height="400" src="images/Ahorcado img1.jpg" width="400">
-            <h1>
-                Juego del ahorcado
-            </h1>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark blanco-b">
+        <div class="container-fluid">
+            <div class="row col-12 justify-content-between">
+                <div class="col-4 align-self-center">
+                    <a class="navbar-brand " href="https://www.unad.edu.co/">
+                        <img src="img/logoUNAD2.png" width="300" height="100" class="d-inline-block align-top" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="col-4 ">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="col-offset-4 align-self-center ">
+                    <a class="navbar-brand " href="https://academia.unad.edu.co/ecbti">
+                        <img src="img/ECBTI.png" width="800" height="100" class="d-inline-block align-top" alt="">
+                    </a>
+                </div>
+            </div><!-- Fin Row  -->
+        </div><!-- Fin Container  -->
+    </nav>
+
+
+    <!-- Inicio del menu lateral -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <!-- Inicio del menu -->
+            <div class="sidebar-header">
+                <h3>Menú
+                </h3>
+                <strong>MPI </strong>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a class="link_option_menu" href="Index.html"><i class="fas fa-home"></i> &nbsp Inicio</a>
+                </li>
+                <li class="active">
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="oi" data-glyph="grid-two-up"></i>
+                        HTML5
+                    </a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="Html1.html"><i class="oi" data-glyph="chevron-right"></i>
+                                &nbsp
+                                ¿Qué es HTML?</a>
+                            <strong>
+                                <a href="Html1.html" data-toggle="tooltip" data-placement="right" title="Ques es HTML">
+                                    <i class="oi" data-glyph="chevron-right"></i> &nbsp MT
+                                </a>
+                            </strong>
+                        </li>
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="Html2.html"><i class="oi" data-glyph="chevron-right"></i>
+                                &nbsp Estructura del HTML</a>
+                            <strong>
+                                <a href="Html2.html" data-toggle="tooltip" data-placement="right" title="Estructura del HTML">
+                                    <i class="oi" data-glyph="chevron-right"></i>
+                                    &nbsp CL
+                                </a>
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#dataSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="oi" data-glyph="grid-two-up"></i>
+                        CSS3
+                    </a>
+                    <ul class="collapse list-unstyled" id="dataSubmenu">
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="CSS1.html"><i class="oi" data-glyph="chevron-right"></i>
+                                &nbsp Historia CSS</a>
+                            <strong>
+                                <a href="CSS1.html" data-toggle="tooltip" data-placement="right" title="Fecha Documento">
+                                    <i class="oi" data-glyph="chevron-right"></i>
+                                    &nbsp FD
+                                </a>
+                            </strong>
+                        </li>
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="CSS2.html"><i class="oi" data-glyph="chevron-right"></i>
+                                &nbsp Implemtacion</a>
+                            <strong>
+                                <a href="CSS2.html" data-toggle="tooltip" data-placement="right" title="Lugar Documento">
+                                    <i class="oi" data-glyph="chevron-right"></i>
+                                    &nbsp LD
+                                </a>
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#adjSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="oi" data-glyph="grid-two-up"></i>
+                        GIT/GITHUB
+                    </a>
+                    <ul class="collapse list-unstyled" id="adjSubmenu">
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="GtiHub1.html"><i class="fas fa-file-audio"></i> &nbsp
+                                Implemtacion</a>
+                            <strong>
+                                <a href="GtiHub1.html" data-toggle="tooltip" data-placement="right" title="Audio">
+                                    <i class="fas fa-file-audio"></i>
+                                    &nbsp AU
+                                </a>
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <a href="#adjSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="oi" data-glyph="grid-two-up"></i>
+                        Juegos
+                    </a>
+                    <ul class="collapse list-unstyled" id="adjSubmenu">
+                        <li class="option_menu">
+                            <a class="link_option_menu" href="juego1.html"><i class="oi" data-glyph="chevron-right"></i>
+                                &nbsp
+                                Juego juego_ahorcado</a>
+                            <strong>
+                                <a href="juego1.html" data-toggle="tooltip" data-placement="right" title="Ques es HTML">
+                                    <i class="oi" data-glyph="chevron-right"></i> &nbsp MT
+                                </a>
+                            </strong>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                <li>
+                    <a class="link_option_menu" href="Multimedia.html"><i class="oi" data-glyph="play-circle"></i>
+                        &nbsp
+                        Multimedia</a>
+                </li>
+                <li>
+                    <a class="link_option_menu" href="Autor.html"><i class="oi" data-glyph="people"></i> &nbsp
+                        Autor</a>
+                </li>
+            </ul>
+            <!-- fin del menu -->
+
             <br>
-            <p>
-                Descubre las palabras ocultas en el juego y podras Ganarle
-                Intentalo!!!.
-            </p>
             <br>
-            <a class="btn btn-primary btn-md" href="index.html" role="button">
-                << Inicio OVI </a> <a class="btn btn-primary btn-md" href="pacman.html" role="button">
-                    Juegue Pacman>>
-            </a>
-            </br>
-            </br>
-            </img>
+            <div id="calendario">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="anterior" onclick="mesantes()"></div>
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div id="posterior" onclick="mesdespues()"></div>
+                    </div>
+                </div>
+                <h3 id="titulos">
+                    </h2>
+                    <table id="diasc">
+                        <tr id="fila0">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr id="fila1">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="fila2">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="fila3">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="fila4">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="fila5">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="fila6">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <div id="fechaactual"><i onclick="actualizar()">HOY: &nbsp; <br> </i></div>
+
+                    <div id="buscafecha">
+                        <form action="#" name="buscar">
+                            <p3>Buscar ... MES <br>
+                                <select name="buscames">
+                                    <option value="0">Enero</option>
+                                    <option value="1">Febrero</option>
+                                    <option value="2">Marzo</option>
+                                    <option value="3">Abril</option>
+                                    <option value="4">Mayo</option>
+                                    <option value="5">Junio</option>
+                                    <option value="6">Julio</option>
+                                    <option value="7">Agosto</option>
+                                    <option value="8">Septiembre</option>
+                                    <option value="9">Octubre</option>
+                                    <option value="10">Noviembre</option>
+                                    <option value="11">Diciembre</option>
+                                </select>
+                                <br>
+                                ... AÑO ... <br>
+                                <input type="text" name="buscaanno" maxlength="4" size="4" />
+                                <br>...
+                                <br>
+                                <input type="button" value="BUSCAR" onclick="mifecha()" />
+                            </p3>
+                        </form>
+                    </div>
+            </div>
+
+            <br>
+            <br>
+            <p3>Contador</p3>
+            <div id="sfc4fk11mrjrgf67lbez69ukckdyrd8p2dg"></div>
+            <script type="text/javascript" src="https://counter5.wheredoyoucomefrom.ovh/private/counter.js?c=4fk11mrjrgf67lbez69ukckdyrd8p2dg&down=async"
+                async></script>
+            <noscript><a href="https://www.contadorvisitasgratis.com" title="contador de visitas para blog"><img src="https://counter5.wheredoyoucomefrom.ovh/private/contadorvisitasgratis.php?c=4fk11mrjrgf67lbez69ukckdyrd8p2dg"
+                        border="0" title="contador de visitas para blog" alt="contador de visitas para blog"></a></noscript>
+
+        </nav>
+        <!-- Fin del menu lateral -->
+        <!-- Inicio del Index -->
+        <div id="content">
+            <br>
+            <br>
+
+            <br>
+            <br>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="InfomracionGeneral" role="tabpanel" aria-labelledby="InfomracionGeneral-tab">
+                    <!-- Inicio de los datos de Andres Dario -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="alert alert-dark" role="alert">                                   
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <iframe src="juego_ahorcado.html" height="1000" width="1500"></iframe>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
         </div>
+        <!-- Inicio del Twitter -->
+        <aside>
+            <div id="content">
+                <div class="border">
+                    <div class="titulo titulo-primary">
+                        <h5 class="panel-title">Cometale a la UNDAD</h5>
+                    </div>
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="https://twitter.com/intent/tweet?screen_name=UniversidadUNAD&ref_src=twsrc%5Etfw"
+                                    class="twitter-mention-button" data-show-count="false">Tweet to
+                                    @UniversidadUNAD</a>
+                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="titulo titulo-primary">
+                        <h5 class="panel-title">Unete a la UNDAD</h5>
+                    </div>
+                    <div class="jumbotron">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="https://twitter.com/UniversidadUNAD?ref_src=twsrc%5Etfw" class="twitter-follow-button"
+                                    data-show-count="false">Follow @UniversidadUNAD</a>
+                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="titulo titulo-primary">
+                    <h5 class="panel-title">Noticias </h5>
+                </div>
+                <div class="jumbotron">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="twitter-timeline" href="https://twitter.com/UniversidadUNAD?ref_src=twsrc%5Etfw">Tweets
+                                by
+                                UniversidadUNAD</a>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
-    <form class="form-inline" name="visor">
-        <center>
-            <table width="547">
-                <!--<img align="left" alt="" height="280" src="images/Ahorcado img2.jpg" width="280">-->
-                <tbody class="ahorcado1">
-                    <tr>
-                        <td align="middle" colspan="3" width="150">
-                            <textarea cols="15" name="displayHombre" rows="6">
-                                </textarea>
-                        <td align="middle" colspan="3" width="150">
-                            <textarea cols="15" name="displayLetras" rows="6">
-                                    </textarea>
-                        <td width="200">
-                    <tr>
-                        <td align="middle" colspan="6" width="300">
-                            <input name="displayPalabra" size="42">
-                        <td align="middle">
-                    <tr>
-                        <td align="middle" width="50">
-                            <input name="botA" onclick="Juega(this.form, 'a')" type="button" value=" A ">
-                        <td align="middle" width="50">
-                            <input name="botB" onclick="Juega(this.form, 'b')" type="button" value=" B ">
-                        <td align="middle" width="50">
-                            <input name="botC" onclick="Juega(this.form, 'c')" type="button" value=" C ">
-                        <td align="middle" width="50">
-                            <input name="botD" onclick="Juega(this.form, 'd')" type="button" value=" D ">
-                        <td align="middle" width="50">
-                            <input name="botE" onclick="Juega(this.form, 'e')" type="button" value=" E ">
-                        <td align="middle" width="50">
-                            <input name="botF" onclick="Juega(this.form, 'f')" type="button" value=" F ">
-                        <td>
-                    <tr>
-                        <td align="middle">
-                            <input name="botG" onclick="Juega(this.form, 'g')" type="button" value=" G ">
-                        <td align="middle">
-                            <input name="botH" onclick="Juega(this.form, 'h')" type="button" value=" H ">
-                        <td align="middle">
-                            <input name="botI" onclick="Juega(this.form, 'i')" type="button" value=" I ">
-                        <td align="middle">
-                            <input name="botJ" onclick="Juega(this.form, 'j')" type="button" value=" J ">
-                        <td align="middle">
-                            <input name="botK" onclick="Juega(this.form, 'k')" type="button" value=" K ">
-                        <td align="middle">
-                            <input name="botL" onclick="Juega(this.form, 'l')" type="button" value=" L ">
-                        <td align="right" valign="center">
-                            Ganadas:
-                            <input name="ganadas" size="4" value="0">
-                    <tr>
-                        <td align="middle">
-                            <input name="botM" onclick="Juega(this.form, 'm')" type="button" value=" M ">
-                        <td align="middle">
-                            <input name="botN" onclick="Juega(this.form, 'n')" type="button" value=" N ">
-                        <td align="middle">
-                            <input name="botÑ" onclick="Juega(this.form, 'ñ')" type="button" value=" Ñ ">
-                        <td align="middle">
-                            <input name="botO" onclick="Juega(this.form, 'o')" type="button" value=" O ">
-                        <td align="middle">
-                            <input name="botP" onclick="Juega(this.form, 'p')" type="button" value=" P ">
-                        <td align="middle">
-                            <input name="botQ" onclick="Juega(this.form, 'q')" type="button" value=" Q ">
-                        <td align="right" valign="center">
-                            Perdidas:
-                            <input name="perdidas" size="4" value="0">
-                    <tr>
-                        <td align="middle">
-                            <input name="botR" onclick="Juega(this.form, 'r')" type="button" value=" R ">
-                        <td align="middle">
-                            <input name="botS" onclick="Juega(this.form, 's')" type="button" value=" S ">
-                        <td align="middle">
-                            <input name="botT" onclick="Juega(this.form, 't')" type="button" value=" T ">
-                        <td align="middle">
-                            <input name="botU" onclick="Juega(this.form, 'u')" type="button" value=" U ">
-                        <td align="middle">
-                            <input name="botV" onclick="Juega(this.form, 'v')" type="button" value=" V ">
-                        <td align="middle">
-                            <input name="botW" onclick="Juega(this.form, 'w')" type="button" value=" W ">
-                        <td>
-                    <tr>
-                        <td align="middle">
-                            <input name="botX" onclick="Juega(this.form, 'x')" type="button" value=" X ">
-                        <td align="middle">
-                            <input name="botY" onclick="Juega(this.form, 'y')" type="button" value=" Y ">
-                        <td align="middle">
-                            <input name="botZ" onclick="Juega(this.form, 'z')" type="button" value=" Z ">
-                        <td align="middle" colspan="3">
-                            <input name="Inicia" onclick="IniciaJuego(this.form)" type="button" value="  Juego nuevo   ">
-                        <td align="middle">
-                            <input name="B1" onclick="this.form.ganadas.value='0'; this.form.perdidas.value='0'" type="button"
-                                value="Limpiar">
-                            </input>
-                        </td>
-                        </input>
-                        </td>
-                        </input>
-                        </td>
-                        </input>
-                        </td>
-                        </input>
-                        </td>
-                    </tr>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </tr>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </tr>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </tr>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </input>
-                    </td>
-                    </tr>
-                    </td>
-                    </input>
-                    </td>
-                    </tr>
-                    </td>
-                    </td>
-                    </td>
-                    </tr>
-                </tbody>
-            </table>
-        </center>
-    </form>
-    <div class="container">
-        <ul style="font-size-adjust: 0.58 ">
-            <h2>
-                Instrucciones del Juego:
-            </h2>
-            <li>
-                <h4>
-                    - Se dibuja en el tablero, colocando una línea por cada letra de la palabra o frase incógnita. Se
-                    debe entregar una pista de la palabra incógnita. Se dibuja la base de la horca (sin el muñeco)
-                </h4>
-            </li>
-            <li>
-                <h4>
-                    - Al inicio el jugador oprime una letra. Si la letra está, se anota en el tablero de la derecha y
-                    en todas las casillas de la misma letra. Si no está, se pone la letra bajo la horca y se dibuja una
-                    parte del muñeco.
-                </h4>
-            </li>
-            <li>
-                <h4>
-                    - El muñeco se dibuja en 10 partes (horca, cabeza, tronco y extremidades), por lo que el adivinador
-                    tiene 6 posibilidades de fallar.
-                </h4>
-            </li>
-            <li>
-                <h4>
-                    - Gana el jugador si descubre la palabra o frase incógnita y Pierde si se dibuja el muñeco en la
-                    horca.
-                </h4>
-            </li>
-            <li>
-                <h4>
-                    -Solo se podra Oprimir las letras si el muñeco no se ha dibujado completamente .
-                </h4>
-            </li>
-            <li>
-                <h4>
-                    -Cuando la palabra se ha completado se identifica como ganador aumentando los juegos ganados, de lo
-                    contrario le muestra un mensaje que ha perdido el juego y oprime el boton de "Juego nuevo" para
-                    volver a empezar
-                </h4>
-            </li>
-        </ul>
+    </aside>
+    <!-- Fin del Twitter -->
     </div>
+    <!-- Fin del index -->
+    </div>
+
+    <hr />
+    <footer>
+        <p>Copyright &copy; DateTime.Now.Year - UNAD</p>
+    </footer>
+
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="Scripts/jquery-3.3.1.slim.min.js"></script>
+    <!-- Popper.JS -->
+
+    <script src="Scripts/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        $('#datetimepicker12').datetimepicker({
+            inline: true,
+            sideBySide: true
+        });
+
+
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
 
 </body>
 
