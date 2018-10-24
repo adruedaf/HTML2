@@ -325,6 +325,7 @@ span {
 
 #sidebar .components #homeSubmenu strong,
 #sidebar .components #dataSubmenu strong,
+#sidebar .components #data1Submenu strong,
 #sidebar .components #adjSubmenu strong {
     display: none;
 }
@@ -451,6 +452,12 @@ a.article:hover {
         display: none;
     }
     #dataSubmenu .option_menu strong{
+        display: block;
+    }
+     #data1Submenu .option_menu .link_option_menu {
+        display: none;
+    }
+    #data1Submenu .option_menu strong{
         display: block;
     }
 
